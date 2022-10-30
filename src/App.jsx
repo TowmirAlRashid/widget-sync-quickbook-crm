@@ -1,8 +1,7 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, MenuItem, Table, TableBody, TableCell, TableRow, TextField, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
-import {LocalizationProvider} from '@mui/x-date-pickers';
-import {DatePicker} from '@mui/x-date-pickers';
+import ReactHookFormWithSelect from "./components/ReactHookFormWithSelect";
+import CustomizedTable from "./components/CustomizedTable";
 
 
 function App() {
@@ -11,6 +10,18 @@ function App() {
   const onSubmit = (data) => {
     console.log(data)
   }
+
+  function createData(name, calories, fat, carbs, protein) {
+    return { name, calories, fat, carbs, protein };
+  }
+
+  const rows = [
+    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+    createData('Eclair', 262, 16.0, 24, 6.0),
+    createData('Cupcake', 305, 3.7, 67, 4.3),
+    createData('Gingerbread', 356, 16.0, 49, 3.9),
+  ];
 
 
   return (
@@ -47,7 +58,8 @@ function App() {
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "flex-end"
+                justifyContent: "flex-end",
+                gap: "1rem"
               }}
             >
               <Box
@@ -82,7 +94,7 @@ function App() {
                             border: "1px solid #c0c0c0",
                             borderRadius: "5px",
                             "& .MuiInputBase-root": {
-                              height: "2.5rem !important"
+                              height: "1.8rem !important"
                             }
                           }} 
                           {...rest}
@@ -108,7 +120,7 @@ function App() {
                             border: "1px solid #c0c0c0",
                             borderRadius: "5px",
                             "& .MuiInputBase-root": {
-                              height: "2.5rem !important"
+                              height: "1.8rem !important"
                             }
                           }} 
                           {...rest}
@@ -135,12 +147,12 @@ function App() {
                       name="Customer_Bill/To"
                       control={control}
                       render={({ field: { ref, ...rest } }) => (
-                        <TextField id="customer_bill_to" multiline={true} variant="outlined" type="text" rows="5" sx={{
+                        <TextField id="customer_bill_to" multiline={true} variant="outlined" type="text" rows="4" sx={{
                             backgroundColor: "#efefef",
                             border: "1px solid #c0c0c0",
                             borderRadius: "5px",
-                            "& .MuiInputBase-inputMultiline": {
-                              minWidth: "8rem !important"
+                            "& .MuiTextField-root": {
+                              Width: "8rem !important"
                             }
                           }} 
                           {...rest}
@@ -162,37 +174,179 @@ function App() {
                 >
                   <Box      //Date
                     sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "flex-end",
-                      alignItems: "end",
-                      gap: "4px"
+                      marginTop: "-0.6rem"
                     }}
                   >
-                    <label htmlFor="ship_to">SHIP TO</label>
-                    <TextField id="ship_to" variant="outlined" type="text" sx={{
-                      backgroundColor: "#efefef",
-                      border: "1px solid #c0c0c0",
-                      borderRadius: "5px",
-                      "& .MuiInputBase-root": {
-                        height: "2.5rem !important"
-                      }
-                    }} />
+                    <ReactHookFormWithSelect
+                      id="ship_to"
+                      name="Ship_To"
+                      label="SHIP TO"
+                      control={control}
+                      variant="outlined"
+                      margin="normal"
+                      justifyContent="flex-end"
+                      flexDirection="row"
+                      alignItems="end"
+                      length={8}
+                    >
+                      <MenuItem value="mr.a">Mr. A</MenuItem>
+                      <MenuItem value="mr.b">Mr. B</MenuItem>
+                      <MenuItem value="mr.c">Mr. C</MenuItem>
+                      <MenuItem value="mr.d">Mr. D</MenuItem>
+                      <MenuItem value="mr.e">Mr. E</MenuItem>
+                    </ReactHookFormWithSelect>
                   </Box>
                   <Box>
-                    <TextField variant="outlined" multiline={true} type="text" rows="6" sx={{
+                    {/* <TextField variant="outlined" multiline={true} type="text" rows="4" sx={{
                         backgroundColor: "#efefef",
                         border: "1px solid #c0c0c0",
                         borderRadius: "5px"
-                      }} />
+                      }} /> */}
+                      <Controller 
+                      name="Ship_to_Textfield"
+                      control={control}
+                      render={({ field: { ref, ...rest } }) => (
+                        <TextField id="ship_to_textfield" multiline={true} variant="outlined" type="text" rows="4" sx={{
+                            backgroundColor: "#efefef",
+                            border: "1px solid #c0c0c0",
+                            borderRadius: "5px",
+                            "& .MuiTextField-root": {
+                              Width: "8rem !important"
+                            }
+                          }} 
+                          {...rest}
+                        />
+                      )}
+                    />
                   </Box>
                 </Box>
               </Box>
-              <Box></Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  gap: "4px",
+                  alignItems: "center"
+                }}
+              >
+                <ReactHookFormWithSelect
+                  id="terms&conditions"
+                  name="Terms_Conditions"
+                  label="TERMS_CONDITIONS"
+                  control={control}
+                  variant="outlined"
+                  margin="normal"
+                  flexDirection="column"
+                  justifyContent="start"
+                  alignItems="start"
+                  length={11}
+                >
+                  <MenuItem value="mr.a">Mr. A</MenuItem>
+                  <MenuItem value="mr.b">Mr. B</MenuItem>
+                  <MenuItem value="mr.c">Mr. C</MenuItem>
+                  <MenuItem value="mr.d">Mr. D</MenuItem>
+                  <MenuItem value="mr.e">Mr. E</MenuItem>
+                </ReactHookFormWithSelect>
+
+                <ReactHookFormWithSelect
+                  id="terms&rep"
+                  name="Rep"
+                  label="REP"
+                  control={control}
+                  variant="outlined"
+                  margin="normal"
+                  flexDirection="column"
+                  justifyContent="start"
+                  alignItems="start"
+                  length={8}
+                >
+                  <MenuItem value="mr.a">Mr. A</MenuItem>
+                  <MenuItem value="mr.b">Mr. B</MenuItem>
+                  <MenuItem value="mr.c">Mr. C</MenuItem>
+                  <MenuItem value="mr.d">Mr. D</MenuItem>
+                  <MenuItem value="mr.e">Mr. E</MenuItem>
+                </ReactHookFormWithSelect>
+
+                <Box      
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: 'start',
+                      alignItems: "start",
+                      gap: "4px"
+                    }}
+                  >
+                    <label htmlFor="other">OTHER</label>
+                    <Controller 
+                      name="Other"
+                      control={control}
+                      render={({ field: { ref, ...rest } }) => (
+                        <TextField id="other" variant="outlined" type="text" sx={{
+                            backgroundColor: "#efefef",
+                            border: "1px solid #c0c0c0",
+                            borderRadius: "5px",
+                            "& .MuiInputBase-root": {
+                              height: "2rem !important"
+                            }
+                          }} 
+                          {...rest}
+                        />
+                      )}
+                    />
+                  </Box>
+              </Box>
             </Box>
           </Box>
 
-          <Button type="submit" variant="outlined">Submit?</Button>
+          <Box                                              // this div holds the table
+            sx={{
+              width: "100%",
+              margin: "20px 0"
+            }}
+          >
+            <CustomizedTable />
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "flex-end"
+            }}
+          >
+            <Box sx={{ width: "25%" }}>
+            <Table aria-label="simple table">
+              <TableBody>
+                {rows.map((row) => (
+                  <TableRow
+                    key={row.name}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, "& .MuiTableCell-root": { borderBottom: "none" } }}
+                  >
+                    <TableCell component="th" scope="row" align="right" sx={{ mr: "4rem"}}>
+                      {row.name}
+                    </TableCell>
+                    <TableCell align="right">{row.calories}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              gap: "1rem"
+            }}
+          >
+            <Button type="submit" variant="outlined" sx={{ backgroundColor: "#f0f0f0", border: "1px solid #f0f0f0"}}>Save & Close</Button>
+            <Button type="submit" variant="contained">Save & New</Button>
+            <Button variant="outlined" sx={{ backgroundColor: "#f0f0f0", border: "1px solid #f0f0f0"}}>Clear</Button>
+          </Box>
         </Box>
       </Box>
     </div>
