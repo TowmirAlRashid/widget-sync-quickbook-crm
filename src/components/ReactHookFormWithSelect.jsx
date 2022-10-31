@@ -10,7 +10,9 @@ const ReactHookFormWithSelect = ({
   justifyContent,
   flexDirection,
   alignItems,
-  length
+  length,
+  border,
+  color
 }) => {
   const labelId = `${name}-label`;
   return (
@@ -21,22 +23,26 @@ const ReactHookFormWithSelect = ({
         alignItems: `${alignItems}`,
         gap: "4px"
     }}>
-      <InputLabel sx={{
-        color: "black !important"
-      }} id={labelId}>{label}</InputLabel>
+      {
+        label && <InputLabel sx={{
+          color: "#666 !important"
+        }} id={labelId}>{label}</InputLabel>
+      }
+      
       <Controller
         name={name}
         control={control}
         render={({ field: { onChange, value } }) => (
           <Select labelId={labelId} label={label} value={value}  onChange={onChange} sx={{
-            backgroundColor: "#efefef",
-            border: "1px solid #c0c0c0",
+            backgroundColor: `${color}`,
+            border: `${border} !important`,
             borderRadius: "5px",
             "& .MuiSelect-select": {
                 height: "1.8rem !important",
                 width: `${length}rem !important`,
                 padding: "0 !important"
-              }
+              },
+            outline: "none"
           }}>
             {children}
           </Select>

@@ -1,42 +1,20 @@
-import { Box, Button, MenuItem, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@mui/material'
+import { Box, MenuItem, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@mui/material'
 import React from 'react'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
 import ReactHookFormWithSelect from './ReactHookFormWithSelect'
 
-const CustomizedTable = () => {
-    const { control, watch, handleSubmit,  setValue } = useForm({
-        test: [
-            { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-            { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-            { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-            { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-            { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-            { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-            { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-            { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-            { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-            { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-        ]
-    })
-
-    const { fields } = useFieldArray(  //field array that controls each row
-        {
-            control,
-            name: "test"
-        }
-    );
-
-    const stage = watch();
-
-
+const CustomizedTable = ({ control, fields, setValue}) => {
 
   return (
     <Box sx={{ width: "100%" }}>
-        <Table sx={{ width: "100%" }}>
+        <Table sx={{ width: "100%", "& .MuiTableCell-root": {
+          padding: "0 !important"
+        } }}>
             <TableHead>
               <TableRow sx={{ 
-                    "& .MuiTableCell-head": {
-                        borderRight: "1px dotted #acacac !important"
+                    "& .MuiTableCell-head:not(:last-child)": {
+                        borderRight: "1px dotted #acacac !important",
+                        color: "#666 !important"
                     } 
                 }}>
                 <TableCell align="left">
@@ -52,17 +30,16 @@ const CustomizedTable = () => {
               </TableRow>
             </TableHead>
 
-            <TableBody>
+            <TableBody sx={{
+              // border: "1px solid black !important"
+            }}>
               {
                 fields.map((row, index) => {
                 return (
                   <TableRow key={row.id} sx={{ 
-                    backgroundColor: `${index % 2 === 1 ? "#e3effe" : "white"}`,
-                    "& .MuiInputBase-input::after": {
-                        borderBottom: "none !important"
-                    }
+                    backgroundColor: `${index % 2 === 1 ? "#e3effe" : "white"}`
                 }}>
-                    <TableCell>
+                    <TableCell sx={{ width: "100px", borderRight: "1px solid #c2c2c2 !important", "& .MuiTableCell-body:last-child": { borderBottom: "1px solid black" }}}>
                         <ReactHookFormWithSelect
                             name={`test[${index}].ITEM`}
                             control={control}
@@ -71,6 +48,9 @@ const CustomizedTable = () => {
                             justifyContent="flex-end"
                             flexDirection="row"
                             alignItems="end"
+                            length={8}
+                            border="none"
+                            color="white"
                             >
                                 <MenuItem value="mr.a">Mr. A</MenuItem>
                                 <MenuItem value="mr.b">Mr. B</MenuItem>
@@ -80,7 +60,7 @@ const CustomizedTable = () => {
                         </ReactHookFormWithSelect>
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell sx={{borderRight: "1px solid #c2c2c2 !important"}}>
                       <Controller
                         name={`test[${index}].DESCRIPTION`}
                         control={control}
@@ -89,49 +69,109 @@ const CustomizedTable = () => {
                                 variant="standard"
                                 sx={{ pointerEvents: "none" }}
                                 {...field}
-                                value={test[index].DESCRIPTION}
+                                // value={`test[${index}].DESCRIPTION`}
+                                InputProps={{ disableUnderline: true }}
                             />
                         )}
                       />
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{borderRight: "1px solid #c2c2c2 !important", width: "150px"}}>
                         <Controller
                             name={`test[${index}].QTY`}
                             control={control}
                             render={({ field }) => (
                                 <TextField
                                     variant="standard"
-                                    // sx={{ pointerEvents: "none" }}
                                     {...field}
+                                    InputProps={{ disableUnderline: true }}
+                                    onChange={(e) => {
+                                      // setValue(`test[${index}].AMOUNT`, (Number(`test[${index}].QTY`) * Number(`test[${index}].COST`)))
+                                      setValue(`test[${index}].AMOUNT`, (Number(`test[${index}].QTY` || 0) * Number(`test[${index}].COST` || 0)).toString())
+                                      field.onChange(e.target.value)
+                                    }}
                                 />
                             )}
                         />
                     </TableCell>
-                    <TableCell>
-                      <Controller
-                        name={`test[${index}].Quantity`}
+                    <TableCell sx={{borderRight: "1px solid #c2c2c2 !important", width: "200px"}} align="right">
+                      {row.COST}
+                      {/* <Controller
+                        name={`test[${index}].COST`}
                         control={control}
                         render={({ field }) => (
-                          <TextField
-                            variant="standard"
-                            {...field}
-                           onChange={(e)=> { setValue(`test[${index}].Total`, ((stage.test[index].Currency_1 || 0) * e.target.value).toString()); field.onChange(e.target.value) } }
-                          />
+                            <TextField
+                                variant="standard"
+                                sx={{ pointerEvents: "none" }}
+                                {...field}
+                                InputProps={{ disableUnderline: true }}
+                            />
                         )}
-                      />
+                      /> */}
                     </TableCell>
-                    <TableCell>
-                      <Controller
-                        name={`test[${index}].Total`}
+                    <TableCell sx={{borderRight: "1px solid #c2c2c2 !important", width: "100px"}} align="right">
+                      {row.AMOUNT}
+                      {/* <Controller
+                        name={`test[${index}].AMOUNT`}
                         control={control}
                         render={({ field }) => (
-                          <TextField
-                            variant="standard"
-                            sx={{ pointerEvents: "none" }}
-                            {...field}
-                          />
+                            <TextField
+                                variant="standard"
+                                sx={{ pointerEvents: "none" }}
+                                {...field}
+                                InputProps={{ disableUnderline: true }}
+                            />
                         )}
-                      />
+                      /> */}
+                    </TableCell>
+                    <TableCell sx={{borderRight: "1px solid #c2c2c2 !important", width: "130px"}} align="right">
+                      {row.MARKUP}
+                      {/* <Controller
+                        name={`test[${index}].MARKUP`}
+                        control={control}
+                        render={({ field }) => (
+                            <TextField
+                                variant="standard"
+                                sx={{ pointerEvents: "none" }}
+                                {...field}
+                                InputProps={{ disableUnderline: true }}
+                            />
+                        )}
+                      /> */}
+                    </TableCell>
+                    <TableCell sx={{borderRight: "1px solid #c2c2c2 !important", width: "100px"}} align="right">
+                      {row.TOTAL}
+                      {/* <Controller
+                        name={`test[${index}].TOTAL`}
+                        control={control}
+                        render={({ field }) => (
+                            <TextField
+                                variant="standard"
+                                sx={{ pointerEvents: "none" }}
+                                {...field}
+                                InputProps={{ disableUnderline: true }}
+                            />
+                        )}
+                      /> */}
+                    </TableCell>
+                    <TableCell sx={{width: "100px", }}>
+                      <ReactHookFormWithSelect
+                          name={`test[${index}].TAX`}
+                          control={control}
+                          variant="outlined"
+                          margin="normal"
+                          justifyContent="flex-end"
+                          flexDirection="row"
+                          alignItems="end"
+                          length={8}
+                          border="none"
+                          color="white"
+                          >
+                              <MenuItem value="mr.a">Mr. A</MenuItem>
+                              <MenuItem value="mr.b">Mr. B</MenuItem>
+                              <MenuItem value="mr.c">Mr. C</MenuItem>
+                              <MenuItem value="mr.d">Mr. D</MenuItem>
+                              <MenuItem value="mr.e">Mr. E</MenuItem>
+                      </ReactHookFormWithSelect>
                     </TableCell>
                   </TableRow>
                 );

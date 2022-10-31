@@ -1,26 +1,52 @@
 import { Box, Button, MenuItem, Table, TableBody, TableCell, TableRow, TextField, Typography } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import ReactHookFormWithSelect from "./components/ReactHookFormWithSelect";
 import CustomizedTable from "./components/CustomizedTable";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 
 function App() {
-  const { control, handleSubmit } = useForm();
+  // const {  } = useForm();
+
+  const {  control, handleSubmit, watch, setValue  } = useForm({
+    defaultValues: {
+      test: [
+        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
+        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
+        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
+        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
+        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
+        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
+        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
+        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
+        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
+        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
+    ]
+    }
+})
+
+const { fields } = useFieldArray(  //field array that controls each row
+    {
+        control,
+        name: "test"
+    }
+);
 
   const onSubmit = (data) => {
     console.log(data)
   }
 
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
+  function createData(name, value) {
+    return { name, value };
   }
 
   const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
+    createData('Frozen yoghurt', 159),
+    createData('Ice cream sandwich', 237),
+    createData('Eclair', 262),
+    createData('Cupcake', 305),
   ];
 
 
@@ -81,24 +107,30 @@ function App() {
                     sx={{
                       display: "flex",
                       flexDirection: "column",
-                      gap: "4px"
+                      gap: "4px",
+                      width: "10rem"
                     }}
                   >
-                    <label htmlFor="date">DATE</label>
+                    <label htmlFor="date" style={{ color: "#666"}}>DATE</label>
                     <Controller 
                       name="DATE"
                       control={control}
-                      render={({ field: { ref, ...rest } }) => (
-                        <TextField id="date" variant="outlined" type="date" format="MM/dd/yyyy" sx={{
-                            backgroundColor: "#efefef",
-                            border: "1px solid #c0c0c0",
-                            borderRadius: "5px",
-                            "& .MuiInputBase-root": {
-                              height: "1.8rem !important"
-                            }
-                          }} 
-                          {...rest}
-                        />
+                      render={({ field  }) => (
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker 
+                            onChange={(newValue) => field.onChange(dayjs(newValue).format('MM/DD/YYYY'))}
+                            // inputFormat="MM-DD-YYYY" 
+                            {...field}
+                            renderInput={(params) => <TextField id="date" variant="outlined" type="date" sx={{
+                                  backgroundColor: "#efefef",
+                                  border: "1px solid #c0c0c0",
+                                  borderRadius: "5px",
+                                  "& .MuiInputBase-root": {
+                                    height: "1.8rem !important",
+                                  }
+                                }} {...params} required />}
+                          />
+                        </LocalizationProvider>
                       )}
                     />
                   </Box>
@@ -107,10 +139,11 @@ function App() {
                     sx={{
                       display: "flex",
                       flexDirection: "column",
-                      gap: "4px"
+                      gap: "4px",
+                      width: "10rem"
                     }}
                   >
-                    <label htmlFor="estimate">ESTIMATE #</label>
+                    <label htmlFor="estimate" style={{ color: "#666"}}>ESTIMATE #</label>
                     <Controller 
                       name="ESTIMATE"
                       control={control}
@@ -130,7 +163,7 @@ function App() {
                   </Box>
                 </Box>
 
-                <Box            // div to hold the USTOMER / BILL TO textfield
+                <Box            // div to hold the CUSTOMER / BILL TO textfield
                   sx={{
                     marginTop: "0.5rem"
                   }}
@@ -142,12 +175,12 @@ function App() {
                       gap: "4px"
                     }}
                   >
-                    <label htmlFor="customer_bill_to">CUSTOMER / BILL TO</label>
+                    <label htmlFor="customer_bill_to" style={{ color: "#666"}}>CUSTOMER / BILL TO</label>
                     <Controller 
                       name="Customer_Bill/To"
                       control={control}
                       render={({ field: { ref, ...rest } }) => (
-                        <TextField id="customer_bill_to" multiline={true} variant="outlined" type="text" rows="4" sx={{
+                        <TextField id="customer_bill_to" multiline={true} variant="outlined" type="text" rows="3" sx={{
                             backgroundColor: "#efefef",
                             border: "1px solid #c0c0c0",
                             borderRadius: "5px",
@@ -172,7 +205,7 @@ function App() {
                     gap: "4px"
                   }}
                 >
-                  <Box      //Date
+                  <Box      //ship to
                     sx={{
                       marginTop: "-0.6rem"
                     }}
@@ -188,6 +221,8 @@ function App() {
                       flexDirection="row"
                       alignItems="end"
                       length={8}
+                      border="1px solid #efefef"
+                      color="#efefef"
                     >
                       <MenuItem value="mr.a">Mr. A</MenuItem>
                       <MenuItem value="mr.b">Mr. B</MenuItem>
@@ -206,7 +241,7 @@ function App() {
                       name="Ship_to_Textfield"
                       control={control}
                       render={({ field: { ref, ...rest } }) => (
-                        <TextField id="ship_to_textfield" multiline={true} variant="outlined" type="text" rows="4" sx={{
+                        <TextField id="ship_to_textfield" multiline={true} variant="outlined" type="text" rows="3" sx={{
                             backgroundColor: "#efefef",
                             border: "1px solid #c0c0c0",
                             borderRadius: "5px",
@@ -228,7 +263,7 @@ function App() {
                   flexDirection: "row",
                   justifyContent: "flex-end",
                   gap: "4px",
-                  alignItems: "center"
+                  alignItems: "center",
                 }}
               >
                 <ReactHookFormWithSelect
@@ -241,7 +276,9 @@ function App() {
                   flexDirection="column"
                   justifyContent="start"
                   alignItems="start"
-                  length={11}
+                  length={10}
+                  border="1px solid #efefef"
+                  color="#efefef"
                 >
                   <MenuItem value="mr.a">Mr. A</MenuItem>
                   <MenuItem value="mr.b">Mr. B</MenuItem>
@@ -261,6 +298,8 @@ function App() {
                   justifyContent="start"
                   alignItems="start"
                   length={8}
+                  border="1px solid #efefef"
+                  color="#efefef"
                 >
                   <MenuItem value="mr.a">Mr. A</MenuItem>
                   <MenuItem value="mr.b">Mr. B</MenuItem>
@@ -275,10 +314,11 @@ function App() {
                       flexDirection: "column",
                       justifyContent: 'start',
                       alignItems: "start",
-                      gap: "4px"
+                      gap: "4px",
+                      width: "9rem"
                     }}
                   >
-                    <label htmlFor="other">OTHER</label>
+                    <label htmlFor="other" style={{ color: "#666"}}>OTHER</label>
                     <Controller 
                       name="Other"
                       control={control}
@@ -288,7 +328,7 @@ function App() {
                             border: "1px solid #c0c0c0",
                             borderRadius: "5px",
                             "& .MuiInputBase-root": {
-                              height: "2rem !important"
+                              height: "1.8rem !important"
                             }
                           }} 
                           {...rest}
@@ -306,10 +346,14 @@ function App() {
               margin: "20px 0"
             }}
           >
-            <CustomizedTable />
+            <CustomizedTable
+              control={control}
+              fields={fields}
+              setValue={setValue}
+            />
           </Box>
 
-          <Box
+          <Box                                              // this table holds the bottom calculation
             sx={{
               display: "flex",
               width: "100%",
@@ -317,17 +361,21 @@ function App() {
             }}
           >
             <Box sx={{ width: "25%" }}>
-            <Table aria-label="simple table">
+            <Table aria-label="simple table" sx={{"& .MuiTableCell-root": {
+                padding: "0 !important"
+              },
+              marginBottom: "30px"
+          }}>
               <TableBody>
                 {rows.map((row) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 }, "& .MuiTableCell-root": { borderBottom: "none" } }}
                   >
-                    <TableCell component="th" scope="row" align="right" sx={{ mr: "4rem"}}>
+                    <TableCell component="th" scope="row" align="right">
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
+                    <TableCell align="right">{row.value}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
