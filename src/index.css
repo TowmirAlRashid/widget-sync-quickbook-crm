@@ -16,3 +16,10 @@ code {
   box-sizing: border-box;
 }
 
+.MuiTableCell-root{
+  border: none !important;
+}
+
+.MuiTableCell-head {
+  padding-left: 5px !important;
+}

@@ -5,24 +5,26 @@ import CustomizedTable from "./components/CustomizedTable";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import { useState } from "react";
 
 
 function App() {
-  // const {  } = useForm();
+  const [selected, setSelected] = useState(false);
 
-  const {  control, handleSubmit, watch, setValue  } = useForm({
+
+  const {  control, handleSubmit, setValue  } = useForm({
     defaultValues: {
       test: [
-        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
-        { ITEM: "mr. a", DESCRIPTION: "aaaaa", QTY: "1", COST: "1000", AMOUNT: "1000", MARKUP: "0", TOTAL: "1000", TAX: "NON" },
+        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
+        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
+        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
+        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
+        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
+        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
+        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
+        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
+        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
+        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
     ]
     }
 })
@@ -43,10 +45,10 @@ const { fields } = useFieldArray(  //field array that controls each row
   }
 
   const rows = [
-    createData('Frozen yoghurt', 159),
-    createData('Ice cream sandwich', 237),
-    createData('Eclair', 262),
-    createData('Cupcake', 305),
+    createData('SUBTOTAL', 0),
+    createData('MARKUP', 0),
+    createData('Eclair', 0),
+    createData('TOTAL', 0),
   ];
 
 
@@ -350,6 +352,8 @@ const { fields } = useFieldArray(  //field array that controls each row
               control={control}
               fields={fields}
               setValue={setValue}
+              selected={selected}
+              setSelected={setSelected}
             />
           </Box>
 
