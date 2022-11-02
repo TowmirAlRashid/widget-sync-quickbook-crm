@@ -12,19 +12,19 @@ function App() {
   const [selected, setSelected] = useState(false);
 
 
-  const {  control, handleSubmit, setValue  } = useForm({
+  const {  control, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       test: [
-        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
-        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
-        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
-        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
-        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
-        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
-        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
-        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
-        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
-        { ITEM: "", DESCRIPTION: "", QTY: "0", COST: "0", AMOUNT: "0", MARKUP: "0", TOTAL: "0", TAX: "NON", editable: false },
+        { ITEM: "", DESCRIPTION: "", QTY: "", COST: "", AMOUNT: "", MARKUP: "", TOTAL: "", TAX: "", editable: false, },
+        { ITEM: "", DESCRIPTION: "", QTY: "", COST: "", AMOUNT: "", MARKUP: "", TOTAL: "", TAX: "", editable: false, },
+        { ITEM: "", DESCRIPTION: "", QTY: "", COST: "", AMOUNT: "", MARKUP: "", TOTAL: "", TAX: "", editable: false, },
+        { ITEM: "", DESCRIPTION: "", QTY: "", COST: "", AMOUNT: "", MARKUP: "", TOTAL: "", TAX: "", editable: false, },
+        { ITEM: "", DESCRIPTION: "", QTY: "", COST: "", AMOUNT: "", MARKUP: "", TOTAL: "", TAX: "", editable: false, },
+        { ITEM: "", DESCRIPTION: "", QTY: "", COST: "", AMOUNT: "", MARKUP: "", TOTAL: "", TAX: "", editable: false, },
+        { ITEM: "", DESCRIPTION: "", QTY: "", COST: "", AMOUNT: "", MARKUP: "", TOTAL: "", TAX: "", editable: false, },
+        { ITEM: "", DESCRIPTION: "", QTY: "", COST: "", AMOUNT: "", MARKUP: "", TOTAL: "", TAX: "", editable: false, },
+        { ITEM: "", DESCRIPTION: "", QTY: "", COST: "", AMOUNT: "", MARKUP: "", TOTAL: "", TAX: "", editable: false, },
+        { ITEM: "", DESCRIPTION: "", QTY: "", COST: "", AMOUNT: "", MARKUP: "", TOTAL: "", TAX: "", editable: false, },
     ]
     }
 })
@@ -35,6 +35,8 @@ const { fields } = useFieldArray(  //field array that controls each row
         name: "test"
     }
 );
+
+const stage = watch();
 
   const onSubmit = (data) => {
     console.log(data)
@@ -354,6 +356,7 @@ const { fields } = useFieldArray(  //field array that controls each row
               setValue={setValue}
               selected={selected}
               setSelected={setSelected}
+              stage={stage}
             />
           </Box>
 
