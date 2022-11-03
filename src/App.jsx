@@ -1,15 +1,61 @@
-import { Box, Button, MenuItem, Table, TableBody, TableCell, TableRow, TextField, Typography } from "@mui/material";
+import { Box, Button, MenuItem, Select, Table, TableBody, TableCell, TableRow, TextField, Typography } from "@mui/material";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import ReactHookFormWithSelect from "./components/ReactHookFormWithSelect";
 import CustomizedTable from "./components/CustomizedTable";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { borderBottom } from "@mui/system";
 
 
 function App() {
   const [selected, setSelected] = useState(false);
+
+  const [bottomData, setBottomData] = useState({
+    subTotal: 0,
+    markUp: 0,
+    tax: 0,
+    total: 0
+  })
+
+  const [taxData, setTaxData] = useState(0.0)
+
+  const TaxField = () => {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          gap: "10px"
+        }}
+      >
+         <Typography>TAX</Typography>
+         <Select
+          sx={{
+            "& .MuiSelect-select": {
+              height: "1.8rem !important",
+              width: `8rem !important`,
+              padding: "0 !important"
+            },
+          }}
+          onChange={(e) => {
+            setTaxData(e.target.value)
+          }}
+          // value={value}
+        >
+            <MenuItem value={2.0}>format 1</MenuItem>
+            <MenuItem value={4.0}>format 2</MenuItem>
+            <MenuItem value={5.0}>format 3</MenuItem>
+            <MenuItem value={8.0}>format 4</MenuItem>
+            <MenuItem value={12.0}>format 5</MenuItem>
+        </Select>
+        <Typography fontWeight="bold">{`(${taxData}%)`}</Typography>
+      </Box>
+    )
+  }
 
 
   const {  control, handleSubmit, setValue, watch } = useForm({
@@ -47,11 +93,26 @@ const stage = watch();
   }
 
   const rows = [
-    createData('SUBTOTAL', 0),
-    createData('MARKUP', 0),
-    createData('Eclair', 0),
-    createData('TOTAL', 0),
+    createData('SUBTOTAL', bottomData.subTotal),
+    createData('MARKUP', bottomData.markUp),
+    createData(<TaxField />, bottomData.tax),
+    createData('TOTAL', bottomData.total),
   ];
+
+  useEffect(() => {
+    console.log('working')
+    setBottomData({
+      ...bottomData,
+      subTotal: stage.test?.reduce((prevValue, row) => {
+        return prevValue += Number(row?.AMOUNT)
+      }, 0.00),
+      markUp: stage.test?.reduce((prevValue, row) => {
+        return prevValue += Number(row?.MARKUP)
+      }, 0.00),
+      tax: ((bottomData.subTotal + bottomData.markUp) * taxData) / 100,
+      total: (bottomData.subTotal + bottomData.markUp + bottomData.tax),
+    })
+  }, [taxData])
 
 
   return (
@@ -61,6 +122,7 @@ const stage = watch();
           width: "100%",
         }}
       >
+        {/* {JSON.stringify(stage)} */}
         <Box                                                // this div holds the entire app
           sx={{
             width: "94%",
@@ -357,6 +419,8 @@ const stage = watch();
               selected={selected}
               setSelected={setSelected}
               stage={stage}
+              bottomData={bottomData}
+              setBottomData={setBottomData}
             />
           </Box>
 
@@ -377,12 +441,17 @@ const stage = watch();
                 {rows.map((row) => (
                   <TableRow
                     key={row.name}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, "& .MuiTableCell-root": { borderBottom: "none" } }}
+                    sx={{ 
+                      '&:last-child td, &:last-child th': { border: 0 }, 
+                      "& .MuiTableCell-root": { borderBottom: "none" }, 
+                      fontSize: "0.875rem" ,
+                      borderSpacing: "200px !important"
+                    }}
                   >
-                    <TableCell component="th" scope="row" align="right">
+                    <TableCell component="th" scope="row" align="right" sx={{ fontSize: "1rem !important", borderSpacing: "50px !important"}}>
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">{row.value}</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: `${row.name === "TOTAL" ? 'bold' : 'normal'}`, fontSize: "1rem !important"}}>{row.value}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -1,12 +1,17 @@
-import { Autocomplete, Box, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@mui/material';
+import { Autocomplete, Box, MenuItem, Select, styled, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@mui/material';
 import React from 'react'
 import { Controller } from 'react-hook-form';
 
 import mainData from '../data';
 
-const CustomizedTable = ({ control, fields, setValue, selected, setSelected, stage }) => {
+const StyledTableCell = styled(TableCell)({
+  paddingLeft: "6px !important",
+  paddingRight: "6px !important"
+})
+
+const CustomizedTable = ({ control, fields, setValue, selected, setSelected, stage, bottomData, setBottomData }) => {
   const handleClick = (event, rowIndex) => {
-    const updated= fields?.map((row, index) => {
+    const updated= stage.test?.map((row, index) => {
       if(index === rowIndex) {
         return {
           ...row,
@@ -22,12 +27,17 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
     setValue('test', updated);
   }
 
+  
+  
+
   return (
     <Box sx={{ width: "100%" }}>
-        {/* {JSON.stringify(fields)} */}
+        {/* {JSON.stringify(stage.test)} */}
       <Table
         sx={{ width: "100%", "& .MuiTableCell-root": {
-          padding: "0 !important"
+          padding: "0 !important",
+          paddingLeft: "6px !important",
+          paddingRight: "6px !important"
         }}}
       >
         <TableHead>
@@ -65,11 +75,11 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
                   key={row.id}  
                   sx={{ 
                     backgroundColor: `${index % 2 === 1 ? "#e3effe" : "white"}`,
-                    height: "28px"
+                    height: "1.8rem"
                   }}
                   onClick={(event) =>!row.editable && handleClick(event, index)}
                 >
-                  <TableCell
+                  <StyledTableCell
                     sx={{ 
                       width: "200px",
                       borderRight: "1px solid #c2c2c2 !important", 
@@ -93,15 +103,16 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
                                   "& .MuiAutocomplete-inputRoot": {
                                     height: "1.8rem !important", 
                                     padding: "0 !important",
-                                    backgroundColor: "white !important"
+                                    backgroundColor: "white !important",
                                   },
                                   "& .MuiInputBase-input": {
                                     padding: "0 !important",
-                                    paddingLeft: "6px !important"
+                                    paddingLeft: "6px !important",
+                                    fontSize: "0.875rem !important",
                                   },
                                   "& .MuiInputBase-root": {
-                                    borderRadius: "0 !important"
-                                  }
+                                    borderRadius: "0 !important",
+                                  },
                                 }}
                                 disablePortal
                                 options={mainData?.map(item => item.item)}
@@ -110,18 +121,13 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
                                   field.onChange(data)
                                   setValue(`test[${index}].DESCRIPTION`, mainData?.filter(item => item.item === data)?.[0]?.description)
                                   setValue(`test[${index}].COST`, mainData?.filter(item => item.item === data)?.[0]?.cost)
-                                  setValue('test', fields.map((row, rowIndex) => {        // need to work here
-                                    if (index === rowIndex) {
-                                      return {
-                                        ...row,
-                                        ITEM: data
-                                      }
-                                    }
-                                  }))
+                                  setValue(`test[${index}].AMOUNT`, ((stage.test[index].COST || 0) * (stage.test[index].QTY || 0)).toString())
+                                  setValue(`test[${index}].TOTAL`, (Number(stage.test[index].AMOUNT || 0) + Number(stage.test[index].MARKUP || 0)).toString())
                                 }}
                                 renderInput={(params) => (
                                   <TextField
                                     {...params}
+                                    sx={{ fontSize: "0.875rem !important" }}
                                   />
                                 )}
                               />
@@ -131,7 +137,7 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
                         :
                         row.ITEM
                     }
-                  </TableCell>
+                  </StyledTableCell>
 
                   <TableCell
                     sx={{
@@ -150,7 +156,9 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
                                 variant="standard"
                                 sx={{ 
                                   pointerEvents: "none",
-                                  marginLeft: "5px !important"
+                                  "& .MuiInputBase-input": {
+                                    fontSize: "0.875rem !important",
+                                  }
                                 }}
                                 {...field}
                                 InputProps={{ disableUnderline: true }}
@@ -179,7 +187,11 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
                           render={({ field }) => (
                             <TextField
                                 variant="standard"
-                                sx={{marginLeft: "5px !important"}}
+                                sx={{
+                                  "& .MuiInputBase-input": {
+                                    fontSize: "0.875rem !important",
+                                  }
+                                }}
                                 {...field}
                                 InputProps={{ disableUnderline: true }}
                                 onChange={(e) => {
@@ -213,7 +225,14 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
                           render={({ field }) => (
                             <TextField
                                 variant="standard"
-                                sx={{ pointerEvents: "none", marginLeft: "5px !important", textAlign: 'right !important' }}
+                                sx={{ 
+                                  pointerEvents: "none",  
+                                  textAlign: 'right !important',
+                                  "& .MuiInputBase-input": {
+                                    fontSize: "0.875rem !important",
+                                    textAlign: 'right'
+                                  } 
+                                }}
                                 {...field}
                                 InputProps={{ disableUnderline: true }}
                             />
@@ -242,7 +261,13 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
                           render={({ field }) => (
                             <TextField
                                 variant="standard"
-                                sx={{ pointerEvents: "none",marginLeft: "5px !important" }}
+                                sx={{ 
+                                  pointerEvents: "none",
+                                  "& .MuiInputBase-input": {
+                                    fontSize: "0.875rem !important",
+                                    textAlign: 'right'
+                                  } 
+                                }}
                                 {...field}
                                 InputProps={{ disableUnderline: true }}
                             />
@@ -271,7 +296,12 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
                           render={({ field }) => (
                             <TextField
                                 variant="standard"
-                                sx={{marginRight: "5px !important"}}
+                                sx={{
+                                  "& .MuiInputBase-input": {
+                                    fontSize: "0.875rem !important",
+                                    textAlign: 'right'
+                                  }
+                                }}
                                 {...field}
                                 InputProps={{ disableUnderline: true }}
                                 onChange={(e) => {
@@ -305,7 +335,13 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
                           render={({ field }) => (
                             <TextField
                                 variant="standard"
-                                sx={{marginRight: "5px !important", pointerEvents: "none"}}
+                                sx={{
+                                  pointerEvents: "none",
+                                  "& .MuiInputBase-input": {
+                                    fontSize: "0.875rem !important",
+                                    textAlign: 'right'
+                                  }
+                                }}
                                 {...field}
                                 InputProps={{ disableUnderline: true }}
                             />
@@ -322,9 +358,39 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
                       borderTop: `${row.editable? "1px solid black !important": "none"}`,
                       borderBottom: `${row.editable? "1px solid black !important": "none"}`,
                       backgroundColor: `${row?.editable ? "white !important" : "inherit"}`,
+                      "& .MuiTableCell-body": {
+                        paddingLeft: "6px !important"
+                      }
                     }}
                   >
-                    {row.TAX}
+                    {
+                      row.editable ? 
+                        <Controller
+                          name={`test[${index}].TAX`}
+                          control={control}
+                          render={({ field: { onChange, value } }) => (
+                            <Select value={value}  onChange={onChange} sx={{
+                              backgroundColor: "white",
+                              border: `none !important`,
+                              borderRadius: "0 !important",
+                              "& .MuiSelect-select": {
+                                  height: "1.8rem !important",
+                                  width: `${8}rem !important`,
+                                  padding: "0 !important"
+                                },
+                              outline: "none",
+                              "& .MuiInputBase-input": {
+                                fontSize: "0.875rem !important",
+                              }
+                            }}>
+                              <MenuItem value="Tax">TAX</MenuItem>
+                              <MenuItem value="Non">NON</MenuItem>
+                            </Select>
+                          )}
+                      />
+                        :
+                        row.TAX
+                    }
                   </TableCell>
                 </TableRow>
               )

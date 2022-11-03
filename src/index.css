@@ -18,6 +18,8 @@ code {
 
 .MuiTableCell-root{
   border: none !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
 }
 
 .MuiTableCell-head {
@@ -26,4 +28,9 @@ code {
 
 .MuiSelect-select {
   padding-left: 5px !important;
+}
+
+.MuiInputBase-root {
+  outline: none !important;
+  border: none !important;
 }

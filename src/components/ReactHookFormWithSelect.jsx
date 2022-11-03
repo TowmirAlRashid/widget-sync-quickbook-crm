@@ -12,7 +12,8 @@ const ReactHookFormWithSelect = ({
   alignItems,
   length,
   border,
-  color
+  color,
+  borderRadius
 }) => {
   const labelId = `${name}-label`;
   return (
@@ -36,12 +37,12 @@ const ReactHookFormWithSelect = ({
           <Select labelId={labelId} label={label} value={value}  onChange={onChange} sx={{
             backgroundColor: `${color}`,
             border: `${border} !important`,
-            borderRadius: "5px",
+            borderRadius: borderRadius,
             "& .MuiSelect-select": {
-                height: "1.8rem !important",
-                width: `${length}rem !important`,
-                padding: "0 !important"
-              },
+              height: "1.8rem !important",
+              width: `${length}rem !important`,
+              padding: "0 !important"
+            },
             outline: "none"
           }}>
             {children}
