@@ -9,7 +9,7 @@ const StyledTableCell = styled(TableCell)({
   paddingRight: "6px !important"
 })
 
-const CustomizedTable = ({ control, fields, setValue, selected, setSelected, stage, bottomData, setBottomData }) => {
+const CustomizedTable = ({ control, fields, setValue, stage }) => {
   const handleClick = (event, rowIndex) => {
     const updated= stage.test?.map((row, index) => {
       if(index === rowIndex) {
@@ -27,6 +27,16 @@ const CustomizedTable = ({ control, fields, setValue, selected, setSelected, sta
     setValue('test', updated);
   }
 
+  // const handleClickAway = () => {
+  //   const updated = stage.test.map(row => {
+  //     return {
+  //       ...row,
+  //       editable: false
+  //     }
+  //   })
+
+  //   setValue('test', updated)
+  // }
   
   
 

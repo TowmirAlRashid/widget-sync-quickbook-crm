@@ -36,4 +36,27 @@ const data = [
     },
 ]
 
+export const taxDataValues = [
+    {
+        name: "Tax Format One",
+        percentage: 2.0
+    },
+    {
+        name: "Tax Format Two",
+        percentage: 4.0
+    },
+    {
+        name: "Tax Format Three",
+        percentage: 5.0
+    },
+    {
+        name: "Tax Format Four",
+        percentage: 10.0
+    },
+    {
+        name: "Tax Format Five",
+        percentage: 12.0
+    },
+]
+
 export default data;

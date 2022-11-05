@@ -6,11 +6,11 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { useEffect, useState } from "react";
-import { borderBottom } from "@mui/system";
+
 
 
 function App() {
-  const [selected, setSelected] = useState(false);
+  const [tableOnFocus, setTableOnFocus] = useState(false);
 
   const [bottomData, setBottomData] = useState({
     subTotal: 0,
@@ -40,6 +40,7 @@ function App() {
               width: `8rem !important`,
               padding: "0 !important"
             },
+            backgroundColor: "#efefef"
           }}
           onChange={(e) => {
             setTaxData(e.target.value)
@@ -56,6 +57,8 @@ function App() {
       </Box>
     )
   }
+
+  // console.log(taxDataValues?.map(item => item.name))
 
 
   const {  control, handleSubmit, setValue, watch } = useForm({
@@ -88,6 +91,38 @@ const stage = watch();
     console.log(data)
   }
 
+  
+
+  useEffect(() => {
+    console.log("working...")
+    setBottomData(prevData => {
+        return {
+          ...prevData,
+
+        subTotal: stage.test?.reduce((prevValue, row) => {
+          return prevValue += Number(row?.AMOUNT)
+        }, 0.00),
+
+        markUp: stage.test?.reduce((prevValue, row) => {
+          return prevValue += Number(row?.MARKUP)
+        }, 0.00),
+
+        tax: ((stage.test?.reduce((prevValue, row) => {
+          return prevValue += Number(row?.AMOUNT)
+        }, 0.00) + stage.test?.reduce((prevValue, row) => {
+          return prevValue += Number(row?.MARKUP)
+        }, 0.00)) * taxData) / 100,
+        
+        total: (stage.test?.reduce((prevValue, row) => {
+          return prevValue += Number(row?.AMOUNT)
+        }, 0.00) + stage.test?.reduce((prevValue, row) => {
+          return prevValue += Number(row?.MARKUP)
+        }, 0.00) + bottomData.tax),
+        }
+    })
+  }, [taxData, stage.test, bottomData.tax])
+
+
   function createData(name, value) {
     return { name, value };
   }
@@ -98,21 +133,6 @@ const stage = watch();
     createData(<TaxField />, bottomData.tax),
     createData('TOTAL', bottomData.total),
   ];
-
-  useEffect(() => {
-    console.log('working')
-    setBottomData({
-      ...bottomData,
-      subTotal: stage.test?.reduce((prevValue, row) => {
-        return prevValue += Number(row?.AMOUNT)
-      }, 0.00),
-      markUp: stage.test?.reduce((prevValue, row) => {
-        return prevValue += Number(row?.MARKUP)
-      }, 0.00),
-      tax: ((bottomData.subTotal + bottomData.markUp) * taxData) / 100,
-      total: (bottomData.subTotal + bottomData.markUp + bottomData.tax),
-    })
-  }, [taxData])
 
 
   return (
@@ -406,23 +426,27 @@ const stage = watch();
             </Box>
           </Box>
 
-          <Box                                              // this div holds the table
-            sx={{
-              width: "100%",
-              margin: "20px 0"
-            }}
-          >
-            <CustomizedTable
-              control={control}
-              fields={fields}
-              setValue={setValue}
-              selected={selected}
-              setSelected={setSelected}
-              stage={stage}
-              bottomData={bottomData}
-              setBottomData={setBottomData}
-            />
-          </Box>
+         
+            <Box                                              // this div holds the table
+              sx={{
+                width: "100%",
+                margin: "20px 0"
+              }}
+            >
+               
+              <CustomizedTable
+                control={control}
+                fields={fields}
+                setValue={setValue}
+                tableOnFocus={tableOnFocus}
+                setTableOnFocus={setTableOnFocus}
+                stage={stage}
+              />
+              {/* </ClickAwayListener> */}
+            </Box>
+          
+
+          
 
           <Box                                              // this table holds the bottom calculation
             sx={{
@@ -448,7 +472,7 @@ const stage = watch();
                       borderSpacing: "200px !important"
                     }}
                   >
-                    <TableCell component="th" scope="row" align="right" sx={{ fontSize: "1rem !important", borderSpacing: "50px !important"}}>
+                    <TableCell component="th" scope="row" align="right" sx={{ fontSize: "1rem !important", marginRight: "200px"}}>
                       {row.name}
                     </TableCell>
                     <TableCell align="right" sx={{ fontWeight: `${row.name === "TOTAL" ? 'bold' : 'normal'}`, fontSize: "1rem !important"}}>{row.value}</TableCell>
